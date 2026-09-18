@@ -37,12 +37,13 @@
   "recipient": "mikembugua.dev@gmail.com",
   "max_results": 40,
   "always_send_zero": false,
-  "remote": {
+"remote": {
     "enabled": true,
     "query": "angular",
-    "sources": ["jobicy", "remoteok"],
+    "sources": ["jobicy", "remoteok", "adzuna"],
     "pages": 1,
-    "max_results": 30
+    "max_days_old": 14,
+    "max_results": 15
   },
   "sources": [
     "myjobmag",

@@ -3,6 +3,47 @@ import re
 
 from ..models import Job
 
+_NON_EN_MARKERS = {
+    "desarrollador", "desarrolladora", "desenvolvedor", "desenvolvedora",
+    "entwickler", "entwicklerin", "développeur", "développeuse",
+    "sviluppatore", "sviluppatrice", "ontwikkelaar", "programador",
+    "programadora", "programmeren", "ingeniero", "ingeniera", "ingenieur",
+    "engenheiro", "engenheira", "requisitos", "experiencia", "experiência",
+    "unternehmen", "bewerbung", "karriere", "stellenangebot", "platz",
+    "puesto", "puestos", "vaga", "vagas", "remoto", "remota", "remotamente",
+    "equipe", "equipo", "equipa", "empresa", "empresas", "trabajo",
+    "trabalho", "acerca", "podrás", "serás", "salário", "salario", "missão",
+    "missio", "rejoindre", "poste", "postes", "équipe", "notre", "nous",
+    "recherchons", "buscamos", "estamos", "candidatos", "candidatura",
+    "anuncio", "anuncios", "oferta", "ofertas", "prácticas", "becario",
+    "sviluppo", "desenvolvimento", "buchhaltung", "zusammenarbeit",
+}
+_ACCENTED = "áàâäãéèêëíìîïóòôöõúùûüçñýÿščžěń"
+
+
+def is_likely_english(text: str) -> bool:
+    """Reject postings that are clearly not in English."""
+    t = (text or "").strip().lower()
+    if not t:
+        return True
+    head = t[:400]
+
+    for ch in head:
+        o = ord(ch)
+        if (0x0400 <= o <= 0x04FF or 0x0600 <= o <= 0x06FF or
+                0x0E00 <= o <= 0x0EFF or 0x4E00 <= o <= 0x9FFF or
+                0xAC00 <= o <= 0xD7AF):
+            return False
+
+    tokens = set(re.findall(r"[a-zà-ÿ]{5,}", head))
+    if tokens & _NON_EN_MARKERS:
+        return False
+
+    accented = sum(1 for ch in head if ch in _ACCENTED)
+    if len(head) >= 60 and accented / len(head) > 0.03:
+        return False
+    return True
+
 
 def strip_html(text: str, limit: int = 0) -> str:
     text = re.sub(r"<br\s*/?>", " ", text)

@@ -1,9 +1,9 @@
 # Daily Job Digest (Kenya + Remote)
 
 A daily morning email with matching jobs for Nairobi/Kenya plus **international
-100% remote** roles, scraped from **MyJobMag**, **Corporate Staffing Services**,
+100% remote** (English-language) roles, scraped from **MyJobMag**, **Corporate Staffing Services**,
 **DevNetJobs**, **BrighterMonday** and (org-specific) **Workable** widgets, plus
-remote boards **Jobicy** and **RemoteOK**. This fork is tuned for **Angular /
+remote boards **Jobicy**, **RemoteOK** and **Adzuna**. This fork is tuned for **Angular /
 frontend / software development** roles. Runs every day at 06:00 EAT via GitHub
 Actions and needs no server of yours. Jobs are ranked **newest-first**, with
 deadlines shown so you never miss an application window.
@@ -39,6 +39,10 @@ In the repo on GitHub: **Settings → Secrets and variables → Actions → New 
 | `GMAIL_SENDER`       | the Gmail address that sends (e.g. `mikembugua.dev@gmail.com`) |
 | `GMAIL_APP_PASSWORD` | the 16-char app password (spaces optional)         |
 | `DIGEST_TO`          | where the digest lands (e.g. `mikembugua.dev@gmail.com`) |
+| `ADZUNA_APP_ID`      | *optional* — free from <https://developer.adzuna.com/notes/create> (adds ~10+ international remote jobs) |
+| `ADZUNA_APP_KEY`     | *optional* — pair with `ADZUNA_APP_ID` above |
+
+If either Adzuna secret is missing, the source is skipped gracefully.
 
 The daily schedule is already configured in `.github/workflows/daily_digest.yml`.
 
@@ -59,8 +63,10 @@ Edit `config.json`:
 - `workable_accounts` — `[["slug", "Company Name"], ...]` pairs for org-specific Workable boards
 - `remote.enabled` — switch international remote jobs on/off
 - `remote.query` — the tech/role searched on the remote boards (default `angular`)
-- `remote.sources` — which remote boards to use (`jobicy`, `remoteok`; a `remotive` module exists but is noisy)
+- `remote.sources` — which remote boards to use (`jobicy`, `remoteok`, `adzuna`; a `remotive` module exists but is noisy)
+- `remote.max_days_old` — only include remote jobs posted in the last N days
 - `remote.max_results` — reserved slots for remote jobs in each digest (e.g. 15)
+- `remote.query` — the tech/role searched on the remote boards (default `angular`)
 - `max_results` — total jobs per email (remote jobs get dedicated reserved slots)
 - You can also drop a source from `sources` if you don't want it.
 

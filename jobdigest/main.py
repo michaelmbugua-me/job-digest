@@ -7,6 +7,7 @@ from .config import load_config, require_env
 from .digester import filter_and_rank
 from .emailer import html_body, plain_text, send_email, today_str
 from .sources import (
+    adzuna,
     brightermonday,
     corporate_staffing,
     devnetjobs,
@@ -24,9 +25,10 @@ SOURCE_FETCHERS = {
     "workable": workable.fetch,
     "jobicy": jobicy.fetch,
     "remoteok": remoteok.fetch,
+    "adzuna": adzuna.fetch,
 }
 
-REMOTE_SOURCES = ("jobicy", "remoteok")
+REMOTE_SOURCES = ("jobicy", "remoteok", "adzuna")
 
 
 def collect(cfg: dict, keywords: list[str], skills: list[str]) -> list:
@@ -46,6 +48,8 @@ def collect(cfg: dict, keywords: list[str], skills: list[str]) -> list:
             if name not in sources:
                 sources.append(name)
         source_kwargs["jobicy"]["count"] = remote.get("count", 50)
+        source_kwargs["adzuna"]["max_days_old"] = remote.get("max_days_old", 14)
+        source_kwargs["adzuna"]["pages"] = remote.get("pages", 1)
 
     if "brightermonday" in cfg:
         source_kwargs["brightermonday"]["lists"] = cfg["brightermonday"].get("lists")

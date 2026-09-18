@@ -17,6 +17,8 @@ jobs:
       GMAIL_SENDER: ${{ secrets.GMAIL_SENDER }}
       GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
       DIGEST_TO: ${{ secrets.DIGEST_TO }}
+      ADZUNA_APP_ID: ${{ secrets.ADZUNA_APP_ID }}
+      ADZUNA_APP_KEY: ${{ secrets.ADZUNA_APP_KEY }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5

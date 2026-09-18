@@ -3,7 +3,7 @@ import datetime
 import requests
 
 from ..models import Job
-from .utils import strip_html
+from .utils import is_likely_english, strip_html
 
 API = "https://jobicy.com/api/v2/remote-jobs"
 HEADERS = {
@@ -40,7 +40,7 @@ def fetch(keywords: list[str], skills: list[str],
         snippet = strip_html(row.get("jobDescription", ""), 260)
 
         full = f"{row.get('jobTitle', '')} {strip_html(row.get('jobDescription', ''), 600)}".lower()
-        if query.lower() not in full:
+        if query.lower() not in full or not is_likely_english(f"{row.get('jobTitle', '')} {snippet}"):
             continue
 
         pub = str(row.get("pubDate", "") or "")
