@@ -42,7 +42,7 @@
     "query": "angular",
     "sources": ["jobicy", "remoteok"],
     "pages": 1,
-    "max_results": 15
+    "max_results": 30
   },
   "sources": [
     "myjobmag",
