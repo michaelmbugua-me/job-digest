@@ -27,7 +27,7 @@
   ],
   "locations": ["nairobi", "kenya"],
   "recipient": "Kithush254@gmail.com",
-  "max_results": 15,
+  "max_results": 40,
   "always_send_zero": false,
   "sources": ["myjobmag", "corporate_staffing", "devnetjobs"]
 }
