@@ -1,15 +1,13 @@
 {
   "keywords": [
     "environmental officer",
-    "project assistant",
-    "programme assistant",
+    "project officer",
     "conservation officer",
     "field officer",
-    "m&e assistant",
-    "data assistant",
-    "gis assistant",
+    "m&e officer",
+    "data officer",
     "sustainability officer",
-    "research assistant"
+    "research officer"
   ],
   "skills": [
     "R",
@@ -25,7 +23,7 @@
     "reporting",
     "field coordination"
   ],
-  "locations": ["nairobi", "kenya"],
+  "locations": ["kenya"],
   "recipient": "Kithush254@gmail.com",
   "max_results": 40,
   "always_send_zero": false,
