@@ -1,3 +1,4 @@
+import datetime
 from dataclasses import dataclass, field
 
 
@@ -8,6 +9,8 @@ class Job:
     company: str = ""
     location: str = ""
     posted: str = ""
+    deadline: str = ""
+    posted_date: datetime.date | None = None
     source: str = "unknown"
     snippet: str = ""
     score: int = 0

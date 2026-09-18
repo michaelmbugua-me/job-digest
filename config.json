@@ -29,5 +29,32 @@
   "recipient": "Kithush254@gmail.com",
   "max_results": 40,
   "always_send_zero": false,
-  "sources": ["myjobmag", "corporate_staffing", "devnetjobs"]
+  "sources": [
+    "myjobmag",
+    "corporate_staffing",
+    "devnetjobs",
+    "brightermonday",
+    "workable"
+  ],
+  "brightermonday": {
+    "lists": [
+      "/jobs",
+      "/jobs/nairobi",
+      "/jobs/community-social-services",
+      "/jobs/product-project-management",
+      "/jobs/research-teaching-training",
+      "/jobs/software-data"
+    ],
+    "pages": 2
+  },
+  "workable_accounts": [
+    ["burn-manufacturing", "BURN Manufacturing"],
+    ["ecolife-conservation", "ECOLIFE Conservation"],
+    ["one-acre-fund", "One Acre Fund"],
+    ["mercy-corps", "Mercy Corps"],
+    ["the-nature-conservancy", "The Nature Conservancy"],
+    ["african-wildlife-foundation", "African Wildlife Foundation"],
+    ["international-rescue-committee", "International Rescue Committee"],
+    ["creative-associates-international", "Creative Associates International"]
+  ]
 }

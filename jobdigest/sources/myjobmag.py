@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 
+from ..dates import parse_posted_date
 from ..models import Job
 
 BASE = "https://www.myjobmag.co.ke"
@@ -10,9 +11,10 @@ HEADERS = {
 }
 
 SOURCE_NAME = "MyJobMag"
+LISTING_PAGES = 5
 
 
-def _parse(page: BeautifulSoup, seen: set) -> list[Job]:
+def _parse(page: BeautifulSoup, seen: set, today) -> list[Job]:
     jobs = []
     for li in page.select("li.job-list-li"):
         anchor = li.select_one("h2 a[href]")
@@ -27,29 +29,39 @@ def _parse(page: BeautifulSoup, seen: set) -> list[Job]:
             continue
         seen.add(url_key)
         desc = li.select_one("li.job-desc")
-        date = li.select_one("#job-date")
+        date_li = li.select_one("#job-date")
+        dated = date_li.get_text(" ", strip=True) if date_li else ""
         jobs.append(
             Job(
                 title=anchor.get_text(" ", strip=True),
                 url=url,
                 snippet=desc.get_text(" ", strip=True) if desc else "",
-                posted=date.get_text(" ", strip=True) if date else "",
+                posted=dated,
+                posted_date=parse_posted_date(dated, today),
                 source=SOURCE_NAME,
             )
         )
     return jobs
 
 
-def fetch(keywords: list[str], session: requests.Session) -> list[Job]:
+def fetch(keywords: list[str], skills: list[str],
+          session: requests.Session, today=None) -> list[Job]:
+    today = today or __import__("datetime").date.today()
     jobs = []
     seen = set()
 
-    try:
-        resp = session.get(f"{BASE}/jobs", headers=HEADERS, timeout=30)
-        resp.raise_for_status()
-        jobs.extend(_parse(BeautifulSoup(resp.text, "html.parser"), seen))
-    except requests.RequestException as exc:
-        print(f"[myjobmag] listings failed: {exc}")
+    for page_num in range(1, LISTING_PAGES + 1):
+        url = f"{BASE}/jobs"
+        if page_num > 1:
+            url = f"{BASE}/jobs/page/{page_num}"
+        try:
+            resp = session.get(url, headers=HEADERS, timeout=30)
+            resp.raise_for_status()
+            jobs.extend(_parse(BeautifulSoup(resp.text, "html.parser"), seen, today))
+        except requests.RequestException as exc:
+            if page_num == 1:
+                print(f"[myjobmag] listings failed: {exc}")
+            break
 
     for kw in keywords:
         try:
@@ -57,7 +69,7 @@ def fetch(keywords: list[str], session: requests.Session) -> list[Job]:
                 f"{BASE}/search/jobs", params={"q": kw}, headers=HEADERS, timeout=30
             )
             resp.raise_for_status()
-            jobs.extend(_parse(BeautifulSoup(resp.text, "html.parser"), seen))
+            jobs.extend(_parse(BeautifulSoup(resp.text, "html.parser"), seen, today))
         except requests.RequestException as exc:
             print(f"[myjobmag] search '{kw}' failed: {exc}")
 

@@ -1,8 +1,10 @@
 # Daily Job Digest (Kenya)
 
 A daily morning email with matching jobs for Nairobi/Kenya, scraped from
-**MyJobMag**, **Corporate Staffing Services** and **DevNetJobs**. Runs every day at
-08:00 EAT via GitHub Actions and needs no server of yours.
+**MyJobMag**, **Corporate Staffing Services**, **DevNetJobs**, **BrighterMonday**
+and (org-specific) **Workable** widgets. Runs every day at 08:00 EAT via GitHub
+Actions and needs no server of yours. Jobs are ranked **newest-first**, with
+deadlines shown so you never miss an application window.
 
 ## Setup (one-time, ~10 minutes)
 
@@ -14,7 +16,7 @@ Gmail will not accept your normal password over SMTP. You need an *app password*
 2. Then: Security → **App passwords** → name it `job-digest`.
 3. Copy the 16-character password (e.g. `abcd efgh ijkl mnop`).
 
-> The sending account can be the same as your inbox (`chrispinodhiambo5@gmail.com`).
+> The sending account can be the same as your inbox (`Kithush254@gmail.com`).
 
 ### 2. Create a GitHub repo and upload this folder
 
@@ -34,9 +36,9 @@ In the repo on GitHub: **Settings → Secrets and variables → Actions → New 
 
 | Secret               | Value                                              |
 | -------------------- | -------------------------------------------------- |
-| `GMAIL_SENDER`       | the Gmail address that sends (e.g. `chrispinodhiambo5@gmail.com`) |
+| `GMAIL_SENDER`       | the Gmail address that sends (e.g. `Kithush254@gmail.com`) |
 | `GMAIL_APP_PASSWORD` | the 16-char app password (spaces optional)         |
-| `DIGEST_TO`          | where the digest lands (e.g. `chrispinodhiambo5@gmail.com`) |
+| `DIGEST_TO`          | where the digest lands (e.g. `Kithush254@gmail.com`) |
 
 The daily schedule is already configured in `.github/workflows/daily_digest.yml`.
 
@@ -53,6 +55,8 @@ Edit `config.json`:
 - `skills` — extra terms that boost relevance
 - `locations` — city/country names; known non-matching locations are dropped
 - `max_results` — how many jobs per email
+- `brightermonday.lists` / `brightermonday.pages` — which career pages to crawl and how deep (default 2)
+- `workable_accounts` — `[["slug", "Company Name"], ...]` pairs for org-specific Workable boards
 - You can also drop a source from `sources` if you don't want it.
 
 ## Try it locally

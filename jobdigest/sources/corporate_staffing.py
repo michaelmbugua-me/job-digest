@@ -1,7 +1,11 @@
+import datetime
+
 import requests
 from bs4 import BeautifulSoup
 
+from ..dates import parse_posted_date
 from ..models import Job
+from .utils import strip_html
 
 BASE = "https://www.corporatestaffing.co.ke"
 HEADERS = {
@@ -13,27 +17,50 @@ SOURCE_NAME = "Corporate Staffing"
 MAX_PAGES = 3
 
 
-def _parse(page: BeautifulSoup, seen: set) -> list[Job]:
+def _parse(page: BeautifulSoup, seen: set, today) -> list[Job]:
     jobs = []
-    for h2 in page.select("h2.entry-title"):
-        anchor = h2.select_one("a[href]")
-        if anchor is None:
+    for wrap in page.select(".entry-content-wrap, article"):
+        header = wrap.select_one("h2.entry-title a[href]")
+        if header is None:
             continue
-        url = anchor.get("href", "").strip()
+        url = header.get("href", "").strip()
         if "/job/" not in url or url in seen:
             continue
         seen.add(url)
+
+        time_el = wrap.select_one("time.published[datetime]") or wrap.select_one(
+            "time[datetime]"
+        )
+        posted_date = None
+        dated = ""
+        if time_el:
+            dt = time_el.get("datetime", "")
+            dated = time_el.get_text(" ", strip=True)
+            try:
+                iso = dt.split("T")[0]
+                posted_date = datetime.date.fromisoformat(iso)
+            except ValueError:
+                posted_date = parse_posted_date(dt, today)
+
+        summary = wrap.select_one(".entry-summary")
+        snippet = strip_html(str(summary), 300) if summary else ""
+
         jobs.append(
             Job(
-                title=anchor.get_text(" ", strip=True),
+                title=header.get_text(" ", strip=True),
                 url=url,
+                snippet=snippet,
+                posted=dated,
+                posted_date=posted_date,
                 source=SOURCE_NAME,
             )
         )
     return jobs
 
 
-def fetch(keywords: list[str], session: requests.Session) -> list[Job]:
+def fetch(keywords: list[str], skills: list[str],
+          session: requests.Session, today=None) -> list[Job]:
+    today = today or datetime.date.today()
     jobs = []
     seen = set()
 
@@ -44,7 +71,7 @@ def fetch(keywords: list[str], session: requests.Session) -> list[Job]:
         try:
             resp = session.get(url, headers=HEADERS, timeout=30)
             resp.raise_for_status()
-            jobs.extend(_parse(BeautifulSoup(resp.text, "html.parser"), seen))
+            jobs.extend(_parse(BeautifulSoup(resp.text, "html.parser"), seen, today))
         except requests.RequestException as exc:
             if page_num == 1:
                 print(f"[corporate_staffing] failed: {exc}")
