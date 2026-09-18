@@ -1,0 +1,33 @@
+{
+  "keywords": [
+    "environmental officer",
+    "project assistant",
+    "programme assistant",
+    "conservation officer",
+    "field officer",
+    "m&e assistant",
+    "data assistant",
+    "gis assistant",
+    "sustainability officer",
+    "research assistant"
+  ],
+  "skills": [
+    "R",
+    "GIS",
+    "QGIS",
+    "data analysis",
+    "environmental monitoring",
+    "biodiversity",
+    "project support",
+    "programme support",
+    "M&E",
+    "monitoring and evaluation",
+    "reporting",
+    "field coordination"
+  ],
+  "locations": ["nairobi", "kenya"],
+  "recipient": "Kithush254@gmail.com",
+  "max_results": 15,
+  "always_send_zero": false,
+  "sources": ["myjobmag", "corporate_staffing", "devnetjobs"]
+}
