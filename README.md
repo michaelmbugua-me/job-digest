@@ -1,8 +1,9 @@
-# Daily Job Digest (Kenya)
+# Daily Job Digest (Kenya + Remote)
 
-A daily morning email with matching jobs for Nairobi/Kenya, scraped from
-**MyJobMag**, **Corporate Staffing Services**, **DevNetJobs**, **BrighterMonday**
-and (org-specific) **Workable** widgets. This fork is tuned for **Angular /
+A daily morning email with matching jobs for Nairobi/Kenya plus **international
+100% remote** roles, scraped from **MyJobMag**, **Corporate Staffing Services**,
+**DevNetJobs**, **BrighterMonday** and (org-specific) **Workable** widgets, plus
+remote boards **Jobicy** and **RemoteOK**. This fork is tuned for **Angular /
 frontend / software development** roles. Runs every day at 06:00 EAT via GitHub
 Actions and needs no server of yours. Jobs are ranked **newest-first**, with
 deadlines shown so you never miss an application window.
@@ -44,7 +45,7 @@ The daily schedule is already configured in `.github/workflows/daily_digest.yml`
 ### 4. Send a test digest
 
 On GitHub go to **Actions → daily-digest → Run workflow → Run workflow**.
-Check your inbox; it takes a minute or two. From then on it runs automatically at 08:00 EAT.
+Check your inbox; it takes a minute or two. From then on it runs automatically at 06:00 EAT.
 
 ## Tuning the jobs you get
 
@@ -56,6 +57,11 @@ Edit `config.json`:
 - `max_results` — how many jobs per email
 - `brightermonday.lists` / `brightermonday.pages` — which career pages to crawl and how deep (default 2)
 - `workable_accounts` — `[["slug", "Company Name"], ...]` pairs for org-specific Workable boards
+- `remote.enabled` — switch international remote jobs on/off
+- `remote.query` — the tech/role searched on the remote boards (default `angular`)
+- `remote.sources` — which remote boards to use (`jobicy`, `remoteok`; a `remotive` module exists but is noisy)
+- `remote.max_results` — reserved slots for remote jobs in each digest (e.g. 15)
+- `max_results` — total jobs per email (remote jobs get dedicated reserved slots)
 - You can also drop a source from `sources` if you don't want it.
 
 ## Try it locally

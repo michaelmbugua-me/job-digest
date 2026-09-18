@@ -66,7 +66,11 @@ def filter_and_rank(jobs: list[Job], keywords: list[str], skills: list[str],
         if job.location:
             loc_text = job.location.lower()
             if any(l in loc_text for l in locations_l) or any(
-                w in loc_text for w in ("remote", "online", "home based", "flexible")
+                w in loc_text for w in (
+                    "remote", "online", "home based", "flexible",
+                    "anywhere", "worldwide", "global", "emea", "apac",
+                    "americas", "europe",
+                )
             ):
                 job.score += 2
             else:

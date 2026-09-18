@@ -10,7 +10,9 @@ from .sources import (
     brightermonday,
     corporate_staffing,
     devnetjobs,
+    jobicy,
     myjobmag,
+    remoteok,
     workable,
 )
 
@@ -20,7 +22,11 @@ SOURCE_FETCHERS = {
     "devnetjobs": devnetjobs.fetch,
     "brightermonday": brightermonday.fetch,
     "workable": workable.fetch,
+    "jobicy": jobicy.fetch,
+    "remoteok": remoteok.fetch,
 }
+
+REMOTE_SOURCES = ("jobicy", "remoteok")
 
 
 def collect(cfg: dict, keywords: list[str], skills: list[str]) -> list:
@@ -30,6 +36,17 @@ def collect(cfg: dict, keywords: list[str], skills: list[str]) -> list:
 
     base_kwargs = {"keywords": keywords, "skills": skills, "session": session, "today": today}
     source_kwargs = {name: dict(base_kwargs) for name in SOURCE_FETCHERS}
+    sources = list(cfg.get("sources", list(SOURCE_FETCHERS)))
+
+    remote = cfg.get("remote") or {}
+    if remote.get("enabled", False):
+        query = remote.get("query", "angular")
+        for name in REMOTE_SOURCES:
+            source_kwargs[name]["query"] = query
+            if name not in sources:
+                sources.append(name)
+        source_kwargs["jobicy"]["count"] = remote.get("count", 50)
+
     if "brightermonday" in cfg:
         source_kwargs["brightermonday"]["lists"] = cfg["brightermonday"].get("lists")
         source_kwargs["brightermonday"]["pages"] = cfg["brightermonday"].get("pages", 2)
@@ -38,7 +55,7 @@ def collect(cfg: dict, keywords: list[str], skills: list[str]) -> list:
             tuple(a) for a in cfg["workable_accounts"]
         ]
 
-    for name in cfg.get("sources", list(SOURCE_FETCHERS)):
+    for name in sources:
         fetcher = SOURCE_FETCHERS.get(name)
         if not fetcher:
             continue
@@ -51,6 +68,22 @@ def collect(cfg: dict, keywords: list[str], skills: list[str]) -> list:
         jobs.extend(found)
         print(f"[{name}] kept {len(found)} enriched jobs")
     return jobs
+
+
+def _is_remote(job) -> bool:
+    if job.source in REMOTE_SOURCES:
+        return True
+    text = f"{job.source} {job.location}".lower()
+    return any(w in text for w in ("remote", "anywhere", "worldwide", "global"))
+
+
+def _sort_key(job, today: datetime.date) -> tuple:
+    posted = job.posted_date
+    return (
+        posted is None,
+        -(today - posted).days if posted else 0,
+        -job.score,
+    )
 
 
 def main() -> None:
@@ -73,7 +106,14 @@ def main() -> None:
         cfg.get("skills", []),
         cfg.get("locations", []),
     )
-    ranked = ranked[: cfg.get("max_results", 15)]
+    max_results = cfg.get("max_results", 15)
+    remote = cfg.get("remote") or {}
+    remote_max = remote.get("max_results", max_results // 2) if remote.get("enabled") else 0
+
+    remote_jobs = [j for j in ranked if _is_remote(j)]
+    local_jobs = [j for j in ranked if not _is_remote(j)]
+    picked = remote_jobs[:remote_max] + local_jobs[: max_results - min(len(remote_jobs), remote_max)]
+    ranked = sorted(picked, key=lambda j: _sort_key(j, datetime.date.today()))[:max_results]
 
     print(f"Total {len(raw)} collected, {len(ranked)} matching jobs.")
 
