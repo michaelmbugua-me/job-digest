@@ -2,7 +2,8 @@
 
 A daily morning email with matching jobs for Nairobi/Kenya, scraped from
 **MyJobMag**, **Corporate Staffing Services**, **DevNetJobs**, **BrighterMonday**
-and (org-specific) **Workable** widgets. Runs every day at 08:00 EAT via GitHub
+and (org-specific) **Workable** widgets. This fork is tuned for **Angular /
+frontend / software development** roles. Runs every day at 06:00 EAT via GitHub
 Actions and needs no server of yours. Jobs are ranked **newest-first**, with
 deadlines shown so you never miss an application window.
 
@@ -16,17 +17,15 @@ Gmail will not accept your normal password over SMTP. You need an *app password*
 2. Then: Security → **App passwords** → name it `job-digest`.
 3. Copy the 16-character password (e.g. `abcd efgh ijkl mnop`).
 
-> The sending account can be the same as your inbox (`Kithush254@gmail.com`).
+> The sending account can be the same as your inbox (`mikembugua.dev@gmail.com`).
 
-### 2. Create a GitHub repo and upload this folder
+### 2. Register the GitHub remote (your repo)
+
+The repo already has git history. Point it at your own GitHub repo and push:
 
 ```bash
 cd ~/job-digest
-git init
-git add .
-git commit -m "job digest"
-# create an empty repo at github.com (e.g. job-digest), then:
-git remote add origin https://github.com/<you>/job-digest.git
+git remote set-url origin https://github.com/michaelmbugua-me/job-digest.git
 git push -u origin main
 ```
 
@@ -36,9 +35,9 @@ In the repo on GitHub: **Settings → Secrets and variables → Actions → New 
 
 | Secret               | Value                                              |
 | -------------------- | -------------------------------------------------- |
-| `GMAIL_SENDER`       | the Gmail address that sends (e.g. `Kithush254@gmail.com`) |
+| `GMAIL_SENDER`       | the Gmail address that sends (e.g. `mikembugua.dev@gmail.com`) |
 | `GMAIL_APP_PASSWORD` | the 16-char app password (spaces optional)         |
-| `DIGEST_TO`          | where the digest lands (e.g. `Kithush254@gmail.com`) |
+| `DIGEST_TO`          | where the digest lands (e.g. `mikembugua.dev@gmail.com`) |
 
 The daily schedule is already configured in `.github/workflows/daily_digest.yml`.
 

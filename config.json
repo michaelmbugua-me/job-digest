@@ -1,30 +1,40 @@
 {
   "keywords": [
-    "environmental officer",
-    "project officer",
-    "conservation officer",
-    "field officer",
-    "m&e officer",
-    "data officer",
-    "sustainability officer",
-    "research officer"
+    "angular",
+    "angular developer",
+    "frontend developer",
+    "front-end developer",
+    "front end developer",
+    "software developer",
+    "software engineer",
+    "full stack developer",
+    "fullstack",
+    "javascript developer",
+    "typescript developer",
+    "web developer",
+    "node.js developer"
   ],
   "skills": [
-    "R",
-    "GIS",
-    "QGIS",
-    "data analysis",
-    "environmental monitoring",
-    "biodiversity",
-    "project support",
-    "programme support",
-    "M&E",
-    "monitoring and evaluation",
-    "reporting",
-    "field coordination"
+    "Angular",
+    "TypeScript",
+    "JavaScript",
+    "RxJS",
+    "NgRx",
+    "HTML5",
+    "CSS",
+    "SCSS",
+    "Tailwind",
+    "Bootstrap",
+    "REST API",
+    "Node.js",
+    "Express",
+    "Git",
+    "frontend",
+    "UI",
+    "agile"
   ],
   "locations": ["kenya"],
-  "recipient": "Kithush254@gmail.com",
+  "recipient": "mikembugua.dev@gmail.com",
   "max_results": 40,
   "always_send_zero": false,
   "sources": [
@@ -38,21 +48,19 @@
     "lists": [
       "/jobs",
       "/jobs/nairobi",
-      "/jobs/community-social-services",
-      "/jobs/product-project-management",
-      "/jobs/research-teaching-training",
-      "/jobs/software-data"
+      "/jobs/software-data",
+      "/jobs/it-telecoms",
+      "/jobs/engineering-technology",
+      "/jobs/remote"
     ],
     "pages": 2
   },
   "workable_accounts": [
-    ["burn-manufacturing", "BURN Manufacturing"],
-    ["ecolife-conservation", "ECOLIFE Conservation"],
-    ["one-acre-fund", "One Acre Fund"],
-    ["mercy-corps", "Mercy Corps"],
-    ["the-nature-conservancy", "The Nature Conservancy"],
-    ["african-wildlife-foundation", "African Wildlife Foundation"],
-    ["international-rescue-committee", "International Rescue Committee"],
-    ["creative-associates-international", "Creative Associates International"]
+    ["m-kopa-solar", "M-KOPA Solar"],
+    ["twiga-foods", "Twiga Foods"],
+    ["ilara-health", "Ilara Health"],
+    ["cellulant", "Cellulant"],
+    ["branch-international", "Branch International"],
+    ["andela", "Andela"]
   ]
 }
