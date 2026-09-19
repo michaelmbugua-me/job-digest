@@ -3,7 +3,8 @@ name: daily-digest
 on:
   schedule:
     # 03:00 UTC = 06:00 EAT every day
-    - cron: "0 3 * * *"
+    - cron: "11 3 * * *"
+    - cron: "19 3 * * *"
   workflow_dispatch:
 
 permissions:
