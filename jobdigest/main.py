@@ -16,6 +16,7 @@ from .sources import (
     remoteok,
     workable,
 )
+from .state import already_sent_today, mark_sent_today
 
 SOURCE_FETCHERS = {
     "myjobmag": myjobmag.fetch,
@@ -121,6 +122,11 @@ def main() -> None:
 
     print(f"Total {len(raw)} collected, {len(ranked)} matching jobs.")
 
+    # --dry-run and --json are read-only: they must never write state.
+    if args.dry_run:
+        print(plain_text(ranked, today_str()))
+        return
+
     if args.json:
         import json
         print(json.dumps(
@@ -133,9 +139,9 @@ def main() -> None:
         ))
         return
 
-    date_str = today_str()
-    if args.dry_run:
-        print(plain_text(ranked, date_str))
+    # Skip if today's digest already went out (e.g. this is the retry cron).
+    if already_sent_today():
+        print("Digest already sent today — skipping.")
         return
 
     if not ranked and not cfg.get("always_send_zero", False):
@@ -145,13 +151,17 @@ def main() -> None:
     if not ranked:
         print("No matching jobs; sending a zero-digest email.")
     else:
-        send_email(
-            require_env("GMAIL_SENDER"),
-            require_env("GMAIL_APP_PASSWORD"),
-            cfg["recipient"],
-            ranked,
-            date_str,
-        )
+        print(f"Sending digest with {len(ranked)} jobs.")
+
+    send_email(
+        require_env("GMAIL_SENDER"),
+        require_env("GMAIL_APP_PASSWORD"),
+        cfg["recipient"],
+        ranked,
+        today_str(),
+    )
+    mark_sent_today()
+    print("Digest sent; state updated.")
 
 
 if __name__ == "__main__":
